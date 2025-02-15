@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Modpack, Distribution, Subversion } from '../types';
-import { Plus, Minus } from 'lucide-react';
+import { Modpack, Distribution } from '../types';
+import { Plus } from 'lucide-react';
 
 interface ModpackFormProps {
   initialData?: Modpack;
