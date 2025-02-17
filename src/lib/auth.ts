@@ -1,23 +1,18 @@
-import { User } from '../types';
+import { pb } from "./pb";
 
-// In a real app, this would be handled by a backend
-const DEMO_USER: User = {
-  username: 'admin',
-  password: 'admin123'
+export const authenticateUser = async (username: string, password: string): Promise<Boolean> => {
+  try {
+    await pb.collection("users").authWithPassword(username, password);
+  } catch (_) {
+    return false;
+  }
+  return pb.authStore.isValid;
 };
 
-export const authenticateUser = (username: string, password: string): boolean => {
-  return username === DEMO_USER.username && password === DEMO_USER.password;
-};
-
-export const setAuthToken = () => {
-  localStorage.setItem('isAuthenticated', 'true');
-};
-
-export const clearAuthToken = () => {
-  localStorage.removeItem('isAuthenticated');
-};
+export function logout() {
+  pb.authStore.clear();
+}
 
 export const isAuthenticated = (): boolean => {
-  return localStorage.getItem('isAuthenticated') === 'true';
+  return pb.authStore.isValid;
 };

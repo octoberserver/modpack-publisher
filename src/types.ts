@@ -1,15 +1,18 @@
 export interface Distribution {
+  id: string;
   name: string;
   link: string;
 }
 
 export interface Subversion {
-  subversionId: string;
+  id: string;
+  sid: string;
   distributions: Distribution[];
 }
 
 export interface Modpack {
   id: string;
+  mid: string;
   name: string;
   fullName: string;
   minecraftVersion: string;

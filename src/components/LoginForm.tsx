@@ -1,22 +1,21 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { authenticateUser, setAuthToken } from '../lib/auth';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { authenticateUser } from "../lib/auth";
 
 export const LoginForm = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (authenticateUser(formData.username, formData.password)) {
-      setAuthToken();
-      navigate('/dashboard');
+    if (await authenticateUser(formData.username, formData.password)) {
+      navigate("/dashboard");
     } else {
-      setError('Invalid credentials');
+      setError("Invalid credentials");
     }
   };
 
@@ -24,7 +23,7 @@ export const LoginForm = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
             Sign in to Dashboard
           </h2>
         </div>
@@ -32,7 +31,7 @@ export const LoginForm = () => {
           {error && (
             <div className="text-red-500 text-sm text-center">{error}</div>
           )}
-          <div className="rounded-md shadow-sm space-y-4">
+          <div className="rounded-md space-y-4">
             <div>
               <label htmlFor="username" className="sr-only">
                 Username
@@ -42,7 +41,7 @@ export const LoginForm = () => {
                 name="username"
                 type="text"
                 required
-                className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-lg shadow-sm relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Username"
                 value={formData.username}
                 onChange={(e) =>
@@ -59,7 +58,7 @@ export const LoginForm = () => {
                 name="password"
                 type="password"
                 required
-                className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-lg shadow-sm relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
                 value={formData.password}
                 onChange={(e) =>

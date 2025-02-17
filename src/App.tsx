@@ -1,8 +1,8 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { LoginForm } from './components/LoginForm';
-import { Dashboard } from './pages/Dashboard';
-import { ProtectedRoute } from './components/ProtectedRoute';
-import './index.css';
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { LoginForm } from "./components/LoginForm";
+import { Dashboard } from "./pages/Dashboard";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import "./index.css";
 
 function App() {
   return (

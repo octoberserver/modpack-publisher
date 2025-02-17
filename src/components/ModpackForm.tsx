@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Modpack, Distribution } from '../types';
-import { Plus } from 'lucide-react';
+import { useState } from "react";
+import { Modpack, Distribution } from "../types";
+import { Plus } from "lucide-react";
 
 interface ModpackFormProps {
   initialData?: Modpack;
@@ -11,15 +11,17 @@ interface ModpackFormProps {
 export const ModpackForm = ({ initialData, onSubmit, onCancel }: ModpackFormProps) => {
   const [formData, setFormData] = useState<Modpack>(
     initialData || {
-      id: '',
-      name: '',
-      fullName: '',
-      minecraftVersion: '',
-      modpackLink: '',
+      id: "",
+      mid: "",
+      name: "",
+      fullName: "",
+      minecraftVersion: "",
+      modpackLink: "",
       subversions: [
         {
-          subversionId: '00',
-          distributions: [{ name: '', link: '' }],
+          id: "",
+          sid: "00",
+          distributions: [{id: "", name: "", link: "" }],
         },
       ],
     }
@@ -31,23 +33,12 @@ export const ModpackForm = ({ initialData, onSubmit, onCancel }: ModpackFormProp
   };
 
   const addSubversion = () => {
-    const newId = formData.subversions.length.toString().padStart(2, '0');
-    setFormData({
-      ...formData,
-      subversions: [
-        ...formData.subversions,
-        {
-          subversionId: newId,
-          distributions: [{ name: '', link: '' }],
-        },
-      ],
-    });
+    const newId = (formData.subversions.length - 1).toString().padStart(2, "0");
+    // TODO
   };
 
   const addDistribution = (subversionIndex: number) => {
-    const newSubversions = [...formData.subversions];
-    newSubversions[subversionIndex].distributions.push({ name: '', link: '' });
-    setFormData({ ...formData, subversions: newSubversions });
+    // TODO
   };
 
   const updateDistribution = (
@@ -56,9 +47,7 @@ export const ModpackForm = ({ initialData, onSubmit, onCancel }: ModpackFormProp
     field: keyof Distribution,
     value: string
   ) => {
-    const newSubversions = [...formData.subversions];
-    newSubversions[subversionIndex].distributions[distributionIndex][field] = value;
-    setFormData({ ...formData, subversions: newSubversions });
+    // TODO
   };
 
   return (
@@ -68,8 +57,8 @@ export const ModpackForm = ({ initialData, onSubmit, onCancel }: ModpackFormProp
           <label className="block text-sm font-medium text-gray-700">ID</label>
           <input
             type="text"
-            value={formData.id}
-            onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+            value={formData.mid}
+            onChange={(e) => setFormData({ ...formData, mid: e.target.value })}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             required
           />
@@ -141,12 +130,12 @@ export const ModpackForm = ({ initialData, onSubmit, onCancel }: ModpackFormProp
 
           {formData.subversions.map((subversion, subversionIndex) => (
             <div
-              key={subversion.subversionId}
+              key={subversion.id}
               className="border rounded-lg p-4 space-y-4"
             >
               <div className="flex items-center justify-between">
                 <h4 className="text-md font-medium">
-                  Subversion {subversion.subversionId}
+                  {formData.mid}.{subversion.sid}
                 </h4>
                 <button
                   type="button"
@@ -166,7 +155,7 @@ export const ModpackForm = ({ initialData, onSubmit, onCancel }: ModpackFormProp
                       updateDistribution(
                         subversionIndex,
                         distIndex,
-                        'name',
+                        "name",
                         e.target.value
                       )
                     }
@@ -181,7 +170,7 @@ export const ModpackForm = ({ initialData, onSubmit, onCancel }: ModpackFormProp
                       updateDistribution(
                         subversionIndex,
                         distIndex,
-                        'link',
+                        "link",
                         e.target.value
                       )
                     }

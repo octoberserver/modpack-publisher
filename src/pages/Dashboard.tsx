@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ModpackList } from '../components/ModpackList';
-import { ModpackForm } from '../components/ModpackForm';
-import { Modpack } from '../types';
-import { clearAuthToken } from '../lib/auth';
-import { LogOut, Plus } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { ModpackList } from "../components/ModpackList";
+import { ModpackForm } from "../components/ModpackForm";
+import { Modpack } from "../types";
+import { logout } from "../lib/auth";
+import { LogOut, Plus } from "lucide-react";
+import { pb } from "../lib/pb";
+import { RecordModel } from "pocketbase";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -12,24 +14,35 @@ export const Dashboard = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingModpack, setEditingModpack] = useState<Modpack | undefined>();
 
-  useEffect(() => {
-    const stored = localStorage.getItem('modpacks');
-    if (stored) {
-      setModpacks(JSON.parse(stored));
-    }
-  }, []);
+  useEffect(() => {(async () => {
+    const modpacks = await pb.collection("modpacks").getFullList({ expand: "subversions.distributions" })
+    console.log(modpacks);
+    setModpacks(modpacks.map((m: RecordModel) => ({
+      id: m.id,
+      mid: m.mid,
+      name: m.name,
+      fullName: m.full_name,
+      minecraftVersion: m.minecraft_version,
+      modpackLink: m.link,
+      subversions: m.expand?.subversions.map((s: RecordModel) => ({
+        id: s.id,
+        sid: s.sid,
+        distributions: s.expand?.distributions.map((d: RecordModel) => ({
+          id: d.id,
+          name: d.name,
+          link: d.link
+        })) || [],
+      })) || [],
+    })));
+  })()}, []);
 
-  const saveModpacks = (newModpacks: Modpack[]) => {
-    localStorage.setItem('modpacks', JSON.stringify(newModpacks));
-    setModpacks(newModpacks);
-  };
+
 
   const handleSubmit = (data: Modpack) => {
     if (editingModpack) {
-      const updated = modpacks.map((m) => (m.id === data.id ? data : m));
-      saveModpacks(updated);
+      pb.collection("modpacks").update(editingModpack.id, data);
     } else {
-      saveModpacks([...modpacks, data]);
+      pb.collection("modpacks").create(data);
     }
     setIsFormOpen(false);
     setEditingModpack(undefined);
@@ -40,16 +53,16 @@ export const Dashboard = () => {
     setIsFormOpen(true);
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this modpack?')) {
-      const filtered = modpacks.filter((m) => m.id !== id);
-      saveModpacks(filtered);
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this modpack?")) {
+      return;
     }
+    await pb.collection("modpacks").delete(id);
   };
 
   const handleLogout = () => {
-    clearAuthToken();
-    navigate('/login');
+    logout();
+    navigate("/login");
   };
 
   return (

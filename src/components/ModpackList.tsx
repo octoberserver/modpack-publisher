@@ -1,5 +1,5 @@
-import { Modpack } from '../types';
-import { Trash2, Pencil } from 'lucide-react';
+import { Modpack } from "../types";
+import { Trash2, Pencil } from "lucide-react";
 
 interface ModpackListProps {
   modpacks: Modpack[];
@@ -34,7 +34,7 @@ export const ModpackList = ({ modpacks, onEdit, onDelete }: ModpackListProps) =>
           {modpacks.map((modpack) => (
             <tr key={modpack.id}>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                {modpack.id}
+                {modpack.mid}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {modpack.name}
